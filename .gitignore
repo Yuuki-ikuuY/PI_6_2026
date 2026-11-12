@@ -1,2 +1,6 @@
 /__pycache__
 /LUNA16
+/luna16_yolo
+/dataset_25d
+/runs
+/yolo11n.pt

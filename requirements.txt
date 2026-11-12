@@ -1,0 +1,7 @@
+SimpleITK>=2.3
+numpy>=1.26
+opencv-python-headless>=4.9
+PyYAML>=6.0
+matplotlib>=3.8
+ultralytics>=8.3      # instala o PyTorch; para GPU, instale antes o PyTorch com CUDA
+pytest>=8.0
