@@ -13,6 +13,7 @@ from ultralytics import YOLO
 PROJECT_DIR = Path(__file__).resolve().parent
 DATA_YAML = PROJECT_DIR / "dataset_25d" / "data.yaml"
 RUNS_DIR = PROJECT_DIR / "runs" / "luna16"
+PRETRAINED_WEIGHTS_DIR = PROJECT_DIR / "weights" / "pretrained"
 
 
 def parse_args() -> argparse.Namespace:
@@ -37,7 +38,12 @@ def main() -> None:
     name = f"yolo11{a.model}_seed{a.seed}"
     print(f"Treinando {name} em {'GPU 0' if device == 0 else 'CPU'}")
 
-    model = YOLO(f"yolo11{a.model}.pt")      # pesos pré-treinados no COCO (baixados se necessário)
+    PRETRAINED_WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
+    pretrained_weights = PRETRAINED_WEIGHTS_DIR / f"yolo11{a.model}.pt"
+    legacy_weights = PROJECT_DIR / pretrained_weights.name
+    if not pretrained_weights.exists() and legacy_weights.is_file():
+        legacy_weights.replace(pretrained_weights)
+    model = YOLO(str(pretrained_weights))  # pesos pré-treinados no COCO (baixados se necessário)
     results = model.train(
         data=str(a.data), epochs=a.epochs, imgsz=a.imgsz, batch=a.batch, patience=a.patience,
         device=device, project=str(RUNS_DIR), name=name, seed=a.seed, deterministic=True,
